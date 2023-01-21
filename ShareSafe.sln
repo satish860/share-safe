@@ -5,6 +5,12 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareSafe.API", "src\ShareSafe.API\ShareSafe.API.csproj", "{8736FD1D-91AF-4410-A30C-2F71083734B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{13784AD5-945F-4B2C-8162-91A508E94CDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F1266450-AFD7-4F9E-A61D-F4105FC49BE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareSafe.Tests", "tests\ShareSafe.Tests\ShareSafe.Tests.csproj", "{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +21,17 @@ Global
 		{8736FD1D-91AF-4410-A30C-2F71083734B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8736FD1D-91AF-4410-A30C-2F71083734B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8736FD1D-91AF-4410-A30C-2F71083734B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8736FD1D-91AF-4410-A30C-2F71083734B0} = {13784AD5-945F-4B2C-8162-91A508E94CDE}
+		{4EFDA7A3-CCF0-4F71-B1B5-EE90ECA1D2D9} = {F1266450-AFD7-4F9E-A61D-F4105FC49BE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7747803B-EFDF-4CB9-8F05-8E3BDC050BFA}
