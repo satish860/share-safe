@@ -24,11 +24,20 @@ namespace ShareSafe.API.Files.CreateFiles
         {   
             var DBName = this.configuration["DBNAME"];
             var database = mongoClient.GetDatabase(DBName);
-            var collection = database.GetCollection<CreateFile>("files");
-            req.Id = ObjectId.GenerateNewId();
-            await collection.InsertOneAsync(req);
+            var collection = database.GetCollection<FileMetadata>("files");
+            FileMetadata fileMetadata = new FileMetadata
+            {
+                Name = req.Name,
+                Description = req.Description,
+                Id = ObjectId.GenerateNewId(),
+                OwnedBy = req.OwnedBy,
+                Signature = req.Signature,
+            };
+            await collection.InsertOneAsync(fileMetadata);
             // Get the File and Create the ID and store it in MongoDB
-            await SendOkAsync(req.Id);
+            await SendOkAsync(fileMetadata.Id);
         }
+
+        
     }
 }

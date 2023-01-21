@@ -1,10 +1,11 @@
 ﻿using MongoDB.Bson;
-using System.Text.Json.Serialization;
 
-namespace ShareSafe.API.Files.CreateFiles
+namespace ShareSafe.API.Files
 {
-    public class CreateFile
+    public class FileMetadata
     {
+        public ObjectId Id { get; set; }
+
         public string? Name { get; set; }
 
         public string? Description { get; set; }
