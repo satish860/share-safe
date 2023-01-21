@@ -1,4 +1,5 @@
 global using FastEndpoints;
+using MongoDB.Driver;
 
 namespace ShareSafe.API
 {
@@ -7,6 +8,12 @@ namespace ShareSafe.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
+            {
+                var uri = s.GetRequiredService<IConfiguration>()["DBHOST"];
+                Console.WriteLine(uri);
+                return new MongoClient(uri);
+            });
             builder.Services.AddFastEndpoints();
             var app = builder.Build();
 

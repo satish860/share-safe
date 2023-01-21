@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
+using DotNet.Testcontainers.Containers;
+using Microsoft.AspNetCore.Mvc.Testing;
 using ShareSafe.API;
 using System;
 using System.Collections.Generic;
@@ -8,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace ShareSafe.Tests
 {
-    public class PingEndpointTests : IClassFixture<WebApplicationFactory<Program>>
+    public class PingEndpointTests : IClassFixture<CustomWebApplicationFactory>
     {
-        private readonly WebApplicationFactory<Program> factory;
+        private readonly CustomWebApplicationFactory factory;
 
-        public PingEndpointTests(WebApplicationFactory<Program> factory)
+        public PingEndpointTests(CustomWebApplicationFactory factory)
         {
             this.factory = factory;
         }
@@ -20,11 +23,15 @@ namespace ShareSafe.Tests
         [Fact]
         public async Task Should_be_able_to_hit_ping_endpoint()
         {
+
             var client = factory.CreateClient();
 
             var response = await client.GetAsync("/ping");
             var content = await response.Content.ReadAsStringAsync();
-            Assert.Equal("pong", content.Replace("\"",string.Empty));
+            /* Weirdly the string contains the double quotes 
+              so has to remove the same .
+            */
+            Assert.Equal("pong", content.Replace("\"", string.Empty));
         }
     }
 }
