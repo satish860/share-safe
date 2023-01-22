@@ -8,10 +8,10 @@ namespace ShareSafe.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Configuration.AddEnvironmentVariables();
             builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
             {
                 var uri = s.GetRequiredService<IConfiguration>()["DBHOST"];
-                Console.WriteLine(uri);
                 return new MongoClient(uri);
             });
             builder.Services.AddFastEndpoints();
