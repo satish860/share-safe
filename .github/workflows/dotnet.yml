@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore .\ShareSafe.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore .\ShareSafe.sln
     - name: Test
-      run: dotnet test  -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal
+      run: dotnet test .\ShareSafe.sln -p:CollectCoverage=true -p:CoverletOutput=TestResults/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal
