@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  share-safe
+  namespace: default
+  labels:
+    app:  share-safe
+    component: api
+spec:
+  selector:
+    matchLabels:
+      app: share-safe
+      component: api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  share-safe
+        component: api
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name:  share-safe-api
+        image:  sharesafeapi:1
+
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+          - name: DBHOST
+            value: mongodb://db:27017
+          - name: DBNAME
+            value: files
+          - name: ASPNETCORE_URLS
+            value: http://+:80
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Development
+        ports:
+            - containerPort: 80
+              name: api
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: share-safe-api
+  namespace: default
+  labels:
+    app: share-safe
+    component: api
+spec:
+  selector:
+    app: share-safe
+    component: api
+  type: LoadBalancer
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+    - name: api
+      protocol: TCP
+      port: 8090
+      targetPort: api
