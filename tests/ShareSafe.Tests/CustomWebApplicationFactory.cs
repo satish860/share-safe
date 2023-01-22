@@ -26,19 +26,28 @@ namespace ShareSafe.Tests
             Password= "password",
         }).Build();
 
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+        
             builder.ConfigureTestServices(Services =>
             {
                 Services.RemoveAll(typeof(IMongoClient));
 
                 Services.AddSingleton<IMongoClient, MongoClient>(s =>
                 {
-                    return new MongoClient(_database.ConnectionString);
+                    var mongoDb = new MongoClient(_database.ConnectionString);             
+                    return mongoDb;
                 });
             });
         }
+
+
+        public void ResetDatabase()
+        {
+            var mongoDb = new MongoClient(_database.ConnectionString);
+            mongoDb.DropDatabase("Files");
+        }
+        
 
         public async Task InitializeAsync()
         {
