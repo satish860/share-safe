@@ -1,5 +1,7 @@
 global using FastEndpoints;
 using MongoDB.Driver;
+using ShareSafe.API.Files;
+using System;
 
 namespace ShareSafe.API
 {
@@ -13,6 +15,14 @@ namespace ShareSafe.API
             {
                 var uri = s.GetRequiredService<IConfiguration>()["DBHOST"];
                 return new MongoClient(uri);
+            });
+            builder.Services.AddScoped<IMongoCollection<FileMetadata>>(s =>
+            {
+                var mongoClient = s.GetRequiredService<IMongoClient>();
+                var DBName = s.GetRequiredService<IConfiguration>()["DBNAME"];
+                var database = mongoClient.GetDatabase(DBName);
+                var collection = database.GetCollection<FileMetadata>("files");
+                return collection;
             });
             builder.Services.AddFastEndpoints();
             var app = builder.Build();

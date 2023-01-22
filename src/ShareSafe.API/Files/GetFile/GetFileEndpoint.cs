@@ -5,13 +5,11 @@ namespace ShareSafe.API.Files.GetFile
 {
     public class GetFileEndpoint : EndpointWithoutRequest
     {
-        private readonly IMongoClient mongoClient;
-        private readonly IConfiguration configuration;
+        private readonly IMongoCollection<FileMetadata> collection;
 
-        public GetFileEndpoint(IMongoClient mongoClient, IConfiguration configuration)
+        public GetFileEndpoint(IMongoCollection<FileMetadata> collection)
         {
-            this.mongoClient = mongoClient;
-            this.configuration = configuration;
+            this.collection = collection;
         }
 
         public override void Configure()
@@ -22,9 +20,6 @@ namespace ShareSafe.API.Files.GetFile
 
         public override async Task HandleAsync(CancellationToken ct)
         {
-            var DBName = this.configuration["DBNAME"];
-            var database = mongoClient.GetDatabase(DBName);
-            var collection = database.GetCollection<FileMetadata>("files");
             var fileId = Route<ObjectId>("fileid");
             var fileMetadata = await collection.Find(p => p.Id == fileId)
                                                .FirstOrDefaultAsync();

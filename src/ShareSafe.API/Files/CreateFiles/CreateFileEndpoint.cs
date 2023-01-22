@@ -6,13 +6,12 @@ namespace ShareSafe.API.Files.CreateFiles
 {
     public class CreateFileEndpoint : Endpoint<CreateFile>
     {
-        private readonly IMongoClient mongoClient;
-        private readonly IConfiguration configuration;
+        
+        private readonly IMongoCollection<FileMetadata> collection;
 
-        public CreateFileEndpoint(IMongoClient mongoClient, IConfiguration configuration)
+        public CreateFileEndpoint(IMongoCollection<FileMetadata> collection)
         {
-            this.mongoClient = mongoClient;
-            this.configuration = configuration;
+            this.collection = collection;
         }
 
         public override void Configure()
@@ -22,10 +21,7 @@ namespace ShareSafe.API.Files.CreateFiles
         }
 
         public override async Task HandleAsync(CreateFile req, CancellationToken ct)
-        {
-            var DBName = this.configuration["DBNAME"];
-            var database = mongoClient.GetDatabase(DBName);
-            var collection = database.GetCollection<FileMetadata>("files");
+        { 
             FileMetadata fileMetadata = new()
             {
                 Name = req.Name,

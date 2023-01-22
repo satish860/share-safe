@@ -5,13 +5,11 @@ namespace ShareSafe.API.Files.ListFIles
 {
     public class ListFileEndpoint : EndpointWithoutRequest<IEnumerable<ListFileResponse>>
     {
-        private readonly IMongoClient mongoClient;
-        private readonly IConfiguration configuration;
+        private readonly IMongoCollection<FileMetadata> collection;
 
-        public ListFileEndpoint(IMongoClient mongoClient, IConfiguration configuration)
+        public ListFileEndpoint(IMongoCollection<FileMetadata> collection)
         {
-            this.mongoClient = mongoClient;
-            this.configuration = configuration;
+            this.collection = collection;
         }
 
         public override void Configure()
@@ -22,11 +20,8 @@ namespace ShareSafe.API.Files.ListFIles
 
         public override async Task HandleAsync(CancellationToken ct)
         {
-            var DBName = this.configuration["DBNAME"];
-            var database = mongoClient.GetDatabase(DBName);
-            var collection = database.GetCollection<FileMetadata>("files");
             List<FileMetadata> fileMetadata = await collection
-                                                   .Find<FileMetadata>(Builders<FileMetadata>.Filter.Empty)
+                                                   .Find(Builders<FileMetadata>.Filter.Empty)
                                                    .ToListAsync();
 
             if (fileMetadata.Count == 0)
