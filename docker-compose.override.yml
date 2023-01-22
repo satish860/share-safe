@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  sharesafe.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DBHOST=mongodb://db:27017
+      - DBNAME=Files
+    ports:
+      - "80"

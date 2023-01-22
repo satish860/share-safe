@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  sharesafe.api:
+    image: ${DOCKER_REGISTRY-}sharesafeapi
+    build:
+      context: .
+      dockerfile: src/ShareSafe.API/Dockerfile
+   
+  db:
+    image: mongo
+    container_name: db
+    ports:
+        - 27017:27017
+    restart: always
