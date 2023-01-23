@@ -24,8 +24,7 @@ spec:
           # - Each init container must complete successfully before the next one starts.
       containers:
       - name:  share-safe-api
-        image:  sharesafeapi:1
-
+        image:  satish860/sharesafeapi:1
         resources:
           requests:
             cpu: 100m
