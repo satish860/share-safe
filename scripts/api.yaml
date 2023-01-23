@@ -78,9 +78,16 @@ kind: Ingress
 metadata:
   name: share-safe-ingress
   namespace: default
+  annotations:
+    cert-manager.io/issuer: letsencrypt-nginx
 spec:
+  tls:
+  - hosts:
+    - api.sharesafe.in
+    secretName: letsencrypt-nginx
   rules:
-   - http:
+   - host: api.sharesafe.in
+     http:
       paths:
       - path: /
         pathType: Prefix
@@ -89,4 +96,5 @@ spec:
             name: share-safe-api
             port:
               number: 80
+  ingressClassName: nginx
 ---

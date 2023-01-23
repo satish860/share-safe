@@ -25,6 +25,10 @@ namespace ShareSafe.API
                 return collection;
             });
             builder.Services.AddFastEndpoints();
+            builder.WebHost.ConfigureKestrel(o =>
+            {
+                o.Limits.MaxRequestBodySize = 1073741824; //set to max allowed file size of your system
+            });
             var app = builder.Build();
 
             app.UseAuthorization();
