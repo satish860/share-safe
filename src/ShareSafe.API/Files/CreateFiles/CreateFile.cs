@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using System.Text.Json.Serialization;
-
-namespace ShareSafe.API.Files.CreateFiles
+﻿namespace ShareSafe.API.Files.CreateFiles
 {
     public class CreateFile
     {
@@ -12,5 +9,25 @@ namespace ShareSafe.API.Files.CreateFiles
         public string? OwnedBy { get; set; }
 
         public string? Signature { get; set; }
+    }
+
+
+    public class CreateFileValidator : Validator<CreateFile>
+    {
+        public CreateFileValidator()
+        {
+            RuleFor(p => p.Name)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithMessage("File Name is Mandatory")
+                .Must(p => IsValidFileName(p))
+                .WithMessage("File Name is not valid. Should Contain extension");
+
+        }
+
+        public bool IsValidFileName(string fileName)
+        {
+            return !string.IsNullOrEmpty(Path.GetExtension(fileName));
+        }
     }
 }

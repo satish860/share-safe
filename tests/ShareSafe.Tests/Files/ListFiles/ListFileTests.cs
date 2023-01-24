@@ -37,7 +37,7 @@ namespace ShareSafe.Tests.Files.ListFiles
             var createResponse = await client.PostAsJsonAsync<CreateFile>("/files", new CreateFile
             {
                 Description = "Test File",
-                Name = "Name",
+                Name = "Name.txt",
             });
             var response = await client.GetAsync("/files");
             response.Should().Be200Ok();

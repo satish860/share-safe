@@ -33,7 +33,7 @@ namespace ShareSafe.Tests.Files.DeleteFiles
             var createResponse = await client.PostAsJsonAsync<CreateFile>("/files", new CreateFile
             {
                 Description = "Test File",
-                Name = "Name",
+                Name = "Name.txt",
             });
 
             var response = await client.DeleteAsync(createResponse.Headers.Location);

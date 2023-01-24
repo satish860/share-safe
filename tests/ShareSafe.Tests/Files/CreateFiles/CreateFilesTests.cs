@@ -22,7 +22,7 @@ namespace ShareSafe.Tests.Files.CreateFiles
             var response = await client.PostAsJsonAsync<CreateFile>("/files", new CreateFile
             {
                 Description = "Test File",
-                Name = "Name",
+                Name = "Name.txt",
             });
             response.Should()
                     .Be201Created().And
@@ -36,7 +36,7 @@ namespace ShareSafe.Tests.Files.CreateFiles
             var expectedfileMetadata = new CreateFile
             {
                 Description = "Test File",
-                Name = "Name",
+                Name = "Name.txt",
             };
             var client = this.customWebApplicationFactory.CreateClient();
             var response = await client.PostAsJsonAsync<CreateFile>("/files", expectedfileMetadata);
