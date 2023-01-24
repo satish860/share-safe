@@ -1,4 +1,6 @@
 global using FastEndpoints;
+using Amazon.Runtime;
+using Amazon.S3;
 using MongoDB.Driver;
 using ShareSafe.API.Files;
 using System;
@@ -11,18 +13,20 @@ namespace ShareSafe.API
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Configuration.AddEnvironmentVariables();
-            builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
+            ConfigureMongoDB(builder);
+            builder.Services.AddSingleton<IAmazonS3>(s =>
             {
-                var uri = s.GetRequiredService<IConfiguration>()["DBHOST"];
-                return new MongoClient(uri);
-            });
-            builder.Services.AddScoped<IMongoCollection<FileMetadata>>(s =>
-            {
-                var mongoClient = s.GetRequiredService<IMongoClient>();
-                var DBName = s.GetRequiredService<IConfiguration>()["DBNAME"];
-                var database = mongoClient.GetDatabase(DBName);
-                var collection = database.GetCollection<FileMetadata>("files");
-                return collection;
+                var configuration = s.GetRequiredService<IConfiguration>();
+                var Config = new AmazonS3Config
+                {
+                    ServiceURL = configuration["DOCTL:ServiceURL"],
+                    ForcePathStyle = false,
+                };
+                var awsAccessKey = configuration["AWS_ACCESS_KEY"];
+                var awsSecret = configuration["AWS_SECRET"];
+                var cred = new BasicAWSCredentials(awsAccessKey, awsSecret);
+                return new AmazonS3Client(cred, Config);
+
             });
             builder.Services.AddFastEndpoints();
             builder.WebHost.ConfigureKestrel(o =>
@@ -36,6 +40,23 @@ namespace ShareSafe.API
             app.MapGet("/", () => "Hello World!");
 
             app.Run();
+        }
+
+        private static void ConfigureMongoDB(WebApplicationBuilder builder)
+        {
+            builder.Services.AddSingleton<IMongoClient, MongoClient>(s =>
+            {
+                var uri = s.GetRequiredService<IConfiguration>()["DBHOST"];
+                return new MongoClient(uri);
+            });
+            builder.Services.AddScoped<IMongoCollection<FileMetadata>>(s =>
+            {
+                var mongoClient = s.GetRequiredService<IMongoClient>();
+                var DBName = s.GetRequiredService<IConfiguration>()["DBNAME"];
+                var database = mongoClient.GetDatabase(DBName);
+                var collection = database.GetCollection<FileMetadata>("files");
+                return collection;
+            });
         }
     }
 }

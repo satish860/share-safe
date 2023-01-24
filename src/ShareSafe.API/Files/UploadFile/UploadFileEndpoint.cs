@@ -1,27 +1,39 @@
-﻿namespace ShareSafe.API.Files.UploadFile
+﻿using Amazon.S3;
+using Amazon.S3.Transfer;
+
+namespace ShareSafe.API.Files.UploadFile
 {
     public class UploadFileEndpoint : EndpointWithoutRequest
     {
+        private readonly IAmazonS3 amazonS3Client;
+        private readonly IConfiguration configuration;
+
+        public UploadFileEndpoint(IAmazonS3 amazonS3Client, IConfiguration configuration)
+        {
+            this.amazonS3Client = amazonS3Client;
+            this.configuration = configuration;
+        }
+
         public override void Configure()
         {
             Post("/files/{fileId}/upload");
-            AllowFileUploads(dontAutoBindFormData: true);
+            AllowFileUploads();
             AllowAnonymous();
         }
 
         public override async Task HandleAsync(CancellationToken ct)
         {
-            await foreach (var section in FormFileSectionsAsync(ct))
+            TransferUtility transferUtility = new TransferUtility(amazonS3Client);
+            var bucketName = configuration["DOCTL:BucketName"];
+
+            if (Files.Count > 0)
             {
-                if (section is not null)
-                {
-                    using (var fs = System.IO.File.Create(section.FileName))
-                    {
-                        await section.Section.Body.CopyToAsync(fs, 1024 * 64, ct);
-                    }
-                }
-                await SendNoContentAsync(ct);
+                await transferUtility.UploadAsync(stream: this.Files[0].OpenReadStream(),
+                                                  bucketName,
+                                                  this.Files[0].Name,
+                                                  ct);
             }
+            await SendNoContentAsync();
         }
     }
 }
